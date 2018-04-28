@@ -6,8 +6,8 @@ nim-bencode is a library to encode/decode torrent files [Bencode](https://en.wik
 ```nim
 import bencode, tables, strformat
 
-let encoder = new Encoder
-let decoder = new Decoder
+let encoder = newEncoder()
+let decoder = newDecoder()
 
 let btListSample1 = @[BencodeType(kind:btInt, i:1), BencodeType(kind:btString, s:"hi") ]
 var btDictSample1 = initOrderedTable[BencodeType, BencodeType]()
@@ -30,4 +30,5 @@ for k, v in testObjects.pairs():
     echo $k & " => " & $v
     doAssert(encoder.encodeObject(k) == v)
     doAssert(decoder.decodeObject(v) == k)
+
 ```
