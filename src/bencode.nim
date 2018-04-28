@@ -146,7 +146,6 @@ proc decode_d(this: Decoder, s: string): (BencodeType, int) =
             d[curKey] = obj
             readingKey = true
         idx += nextobjpos
-    echo "DICT :" & $d
     return (BencodeType(kind:btDict, d: d), idx)
 
 proc decode(this: Decoder,  source: string) : (BencodeType, int) =
