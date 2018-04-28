@@ -1,7 +1,7 @@
 import bencode, tables, strformat
 
-let encoder = new Encoder
-let decoder = new Decoder
+let encoder = newEncoder()
+let decoder = newDecoder()
 
 let btListSample1 = @[BencodeType(kind:btInt, i:1), BencodeType(kind:btString, s:"hi") ]
 var btDictSample1 = initOrderedTable[BencodeType, BencodeType]()
