@@ -62,24 +62,24 @@ proc `==`* (a, b: BencodeType): bool =
 
 
 
-method encode(this: Encoder,  obj: BencodeType) : string
+proc encode(this: Encoder,  obj: BencodeType) : string
 
-method encode_s(this: Encoder, s: string) : string=
+proc encode_s(this: Encoder, s: string) : string=
     # TODO: check len
     return $s.len & ":" & s
 
-method encode_i(this: Encoder, i: int) : string=
+proc encode_i(this: Encoder, i: int) : string=
     # TODO: check len
     return fmt("i{i}e") 
     
-method encode_l(this: Encoder, l: seq[BencodeType]): string =
+proc encode_l(this: Encoder, l: seq[BencodeType]): string =
     var encoded = "l"
     for el in l:
         encoded &= this.encode(el)
     encoded &= "e"
     return encoded
 
-method encode_d(this: Encoder, d: OrderedTable[BencodeType, BencodeType]): string =
+proc encode_d(this: Encoder, d: OrderedTable[BencodeType, BencodeType]): string =
     var encoded = "d"
     for k, v in d.pairs():
         assert k.kind == BencodeKind.btString
@@ -88,27 +88,27 @@ method encode_d(this: Encoder, d: OrderedTable[BencodeType, BencodeType]): strin
     encoded &= "e"
     return encoded
 
-method encode(this: Encoder,  obj: BencodeType) :  string =
+proc encode(this: Encoder,  obj: BencodeType) :  string =
     case obj.kind
     of BencodeKind.btString:  result =this.encode_s(obj.s)
     of BencodeKind.btInt :  result = this.encode_i(obj.i)
     of BencodeKind.btList : result = this.encode_l(obj.l)
     of BencodeKind.btDict : result = this.encode_d(obj.d)
 
-method decode(this: Decoder,  source: string) : (BencodeType, int)
+proc decode(this: Decoder,  source: string) : (BencodeType, int)
 
-method decode_s(this: Decoder, s: string) : (BencodeType, int) =
+proc decode_s(this: Decoder, s: string) : (BencodeType, int) =
     let lengthpart = s.split(":")[0]
     let sizelength = lengthpart.len
     let strlen = parseInt(lengthpart)
     return (BencodeType(kind:btString, s: s[sizelength+1..strlen+1]), sizelength+1+strlen)
 
-method decode_i(this: Decoder, s: string) : (BencodeType, int) =
+proc decode_i(this: Decoder, s: string) : (BencodeType, int) =
     let epos = s.find('e')
     let i = parseInt(s[1..<epos])
     return (BencodeType(kind:btInt, i:i), epos+1)
     
-method decode_l(this: Decoder, s: string): (BencodeType, int) =
+proc decode_l(this: Decoder, s: string): (BencodeType, int) =
     # l ... e
     var els = newSeq[BencodeType]()
     var curchar = s[1]
@@ -126,7 +126,7 @@ method decode_l(this: Decoder, s: string): (BencodeType, int) =
         idx += nextobjpos
     return (BencodeType(kind:btList, l:els), idx)
 
-method decode_d(this: Decoder, s: string): (BencodeType, int) =
+proc decode_d(this: Decoder, s: string): (BencodeType, int) =
     var d = initOrderedTable[BencodeType, BencodeType]()
     var curchar = s[1]
     var idx = 1
@@ -149,7 +149,7 @@ method decode_d(this: Decoder, s: string): (BencodeType, int) =
     echo "DICT :" & $d
     return (BencodeType(kind:btDict, d: d), idx)
 
-method decode(this: Decoder,  source: string) : (BencodeType, int) =
+proc decode(this: Decoder,  source: string) : (BencodeType, int) =
     var curchar = source[0]
     var idx = 0
     while idx < source.len:
@@ -181,11 +181,16 @@ method decode(this: Decoder,  source: string) : (BencodeType, int) =
             return (obj, idx)
 
 
+proc newEncoder*(): Encoder =
+    new Encoder
 
-method encodeObject*(this: Encoder, obj: BencodeType) : string =
+proc newDecoder*(): Decoder = 
+    new Decoder
+
+proc encodeObject*(this: Encoder, obj: BencodeType) : string =
     return this.encode(obj)
 
-method decodeObject*(this: Decoder, source:string) : BencodeType =
+proc decodeObject*(this: Decoder, source:string) : BencodeType =
     let p = this.decode(source)
     return p[0]
 
