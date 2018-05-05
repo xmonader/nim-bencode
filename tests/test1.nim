@@ -1,4 +1,4 @@
-import bencode, tables, strformat
+import bencodeparser, tables, strformat
 
 let encoder = newEncoder()
 let decoder = newDecoder()
