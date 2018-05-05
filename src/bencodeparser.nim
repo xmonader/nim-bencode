@@ -1,8 +1,8 @@
-# nim_bencode
+# bencodeparser
 # Copyright xmonader
 # bencode library
 
-import strformat, tables, json, strutils, hashes
+import strformat, tables, strutils, hashes
 
 # or if you want a distinct type
 # type btString = distinct string
