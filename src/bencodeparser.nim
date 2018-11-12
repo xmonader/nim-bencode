@@ -155,25 +155,25 @@ proc decode(this: Decoder,  source: string) : (BencodeType, int) =
         curchar = source[idx]
         case curchar
         of 'i':
-            let pair = this.decode_i(source[idx..source.len])
+            let pair = this.decode_i(source[idx..^1])
             let obj = pair[0]
             let nextobjpos = pair[1] 
             idx += nextobjpos
             return (obj, idx)
         of 'l':
-            let pair = this.decode_l(source[idx..source.len])
+            let pair = this.decode_l(source[idx..^1])
             let obj = pair[0]
             let nextobjpos = pair[1] 
             idx += nextobjpos
             return (obj, idx)
         of 'd':
-            let pair = this.decode_d(source[idx..source.len])
+            let pair = this.decode_d(source[idx..^1])
             let obj = pair[0]
             let nextobjpos = pair[1] 
             idx += nextobjpos
             return (obj, idx)
         else: 
-            let pair = this.decode_s(source[idx..source.len])
+            let pair = this.decode_s(source[idx..^1])
             let obj = pair[0]
             let nextobjpos = pair[1] 
             idx += nextobjpos
