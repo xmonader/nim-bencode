@@ -101,7 +101,7 @@ proc decode_s(this: Decoder, s: string) : (BencodeType, int) =
     let lengthpart = s.split(":")[0]
     let sizelength = lengthpart.len
     let strlen = parseInt(lengthpart)
-    return (BencodeType(kind:btString, s: s[sizelength+1..strlen+1]), sizelength+1+strlen)
+    return (BencodeType(kind:btString, s: s[sizelength+1..sizelength+strlen]), sizelength+1+strlen)
 
 proc decode_i(this: Decoder, s: string) : (BencodeType, int) =
     let epos = s.find('e')
